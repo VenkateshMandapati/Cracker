@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import java.util.Collections;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
@@ -17,9 +18,8 @@ public class FoodWithNutrientsRequest {
     @FoodGroupIdValidation
     String foodGroupId;
 
-    @NotEmpty(message="nutrient list cant be empty")
     @NutrientIdsValidation
-    private List<String> nutrientIds;
+    private List<String> nutrientIds= Collections.emptyList();
 
     public FoodWithNutrientsRequest() {
     }

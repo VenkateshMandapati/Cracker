@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 import com.codelove.cracker.constraints.CustomerIdValidation;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -31,6 +33,9 @@ public class Customer {
     @Email
     @Column(name="email")
     private String email;
+
+    @NotEmpty(message="password cannot be empty")
+    private String password;
 
     public Customer() {
     }
@@ -67,6 +72,14 @@ public class Customer {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String toString() {
         return "Customer{" +
@@ -74,6 +87,7 @@ public class Customer {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
                 '}';
     }
 }

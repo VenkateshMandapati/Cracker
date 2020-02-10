@@ -13,6 +13,7 @@ import com.codelove.cracker.ndbapi.service.INDBApiService;
 import com.codelove.cracker.requestTypes.FoodEntryRequest;
 import com.codelove.cracker.responseTypes.FoodDetailsPerDay;
 import com.codelove.cracker.responseTypes.FoodDetailsResponse;
+import com.codelove.cracker.responseTypes.LoginResponse;
 import com.codelove.cracker.responseTypes.Meal;
 
 import com.codelove.cracker.responseTypes.NutrientInfo;
@@ -115,7 +116,34 @@ public class CalorieTrackerService implements ICalorieTrackerService{
     public FoodDetailsResponse getFoodDetailsForSingleDay(int customerId, String startDate) {
     	LocalDate date = LocalDate.parse(startDate);
     	List<FoodLogEntry> loggedFoodDetails = foodLogEntryRepository.getFoodDetailsForSingleDay(customerId, startDate);
-    	Map<String, Meal> mealMap = initAndGetMealMap();
+        return convertFoodLogEntryToFoodDetailsResponse(customerId, loggedFoodDetails, date);
+//    	Map<String, Meal> mealMap = initAndGetMealMap();
+//
+//        loggedFoodDetails.stream().forEach(foodLogEntry -> this.populateMealMapForSingleFoodLogEntry(foodLogEntry, mealMap));
+//
+//        List<Meal> oneDayMealsList = new ArrayList<>();
+//
+//        for(Map.Entry<String, Meal> entry:mealMap.entrySet()){
+//            if(!entry.getValue().getPartOfMeals().isEmpty()){
+//                oneDayMealsList.add(entry.getValue());
+//            }
+//        }
+//
+//        List<FoodDetailsPerDay> foodDetailsPerDayList = new ArrayList<>();
+//        foodDetailsPerDayList.add(mapFoodDetailsPerDay(date, oneDayMealsList));
+//        return mapFoodDetailsResponse(customerId, foodDetailsPerDayList);
+    }
+
+    @Override
+    public FoodDetailsResponse getCustomerLastLoggedFoodDetails(int customerId){
+        FoodLogEntry foodLogEntry =  foodLogEntryRepository.getCustomerLastLoggedFoodDetails(customerId);
+        List<FoodLogEntry> loggedFoodDetails = new ArrayList<>();
+        loggedFoodDetails.add(foodLogEntry);
+        return convertFoodLogEntryToFoodDetailsResponse(customerId, loggedFoodDetails, foodLogEntry.getDay());
+    }
+
+    private FoodDetailsResponse convertFoodLogEntryToFoodDetailsResponse(int customerId, List<FoodLogEntry> loggedFoodDetails, LocalDate date){
+        Map<String, Meal> mealMap = initAndGetMealMap();
 
         loggedFoodDetails.stream().forEach(foodLogEntry -> this.populateMealMapForSingleFoodLogEntry(foodLogEntry, mealMap));
 
@@ -164,6 +192,16 @@ public class CalorieTrackerService implements ICalorieTrackerService{
         foodWithNutrientsResponse = ndbApiService.getNutrientsInfoForFood(foodName, foodGroupId, nutrientIds);
         NutrientsSearchResponse nutrientSearchResponse = mapNutrientResponse(foodWithNutrientsResponse);
         return nutrientSearchResponse;
+    }
+
+    @Override
+    public LoginResponse isCustomerCredentialsValid(String email, String password){
+        Customer customer =  customerDaoRepository.findByEmail(email);
+        if(customer == null || !password.equals(customer.getPassword())){
+            LoginResponse loginResponse = new LoginResponse();
+            loginResponse.setIsCustomerValid(false);
+        }
+        return new LoginResponse(true, customer.getCustomerId(), customer.getFirstName(), customer.getLastName());
     }
 
     private FoodLogEntry mapFoodEntryRequest(FoodEntryRequest foodEntryRequest){
