@@ -19,6 +19,12 @@ public interface IFoodLogEntryRepository extends JpaRepository<FoodLogEntry, Int
 
     //deleteByID()
 
+    @Query(nativeQuery=true, value= "Select * From food_storage f where f.customer_id=:id ORDER BY time_stamp DESC LIMIT 1")
+    FoodLogEntry getCustomerLastLoggedFoodDetails(@Param("id") Integer id);
+
+    //JPQL, which is spring jpa query language
     @Query("Select f.id From FoodLogEntry f where f.customerId=:id")
     List<Integer> findAllLogEntryIdForCustomer(@Param("id") Integer id);
+
+
 }

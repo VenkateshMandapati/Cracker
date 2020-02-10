@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import {Link} from 'react-router-dom'
 
 class Header extends Component {
 
@@ -7,7 +8,7 @@ class Header extends Component {
             <div className="container-fluid">
                 <header className="header">
                     <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                        <a className="navbar-brand" href="#">Logo</a>
+                        <Link className="navbar-brand" to="/">Logo</Link>
                         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                             <span className="navbar-toggler-icon"></span>
                         </button>
@@ -15,13 +16,13 @@ class Header extends Component {
                         <div className="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul className="navbar-nav mr-auto">
                             <li className="nav-item active">
-                                <a className="nav-link" href="#">Home <span className="sr-only">(current)</span></a>
+                                <Link className="nav-link" to="/">Home <span className="sr-only">(current)</span></Link>
                             </li>
                             <li className="nav-item active">
-                                <a className="nav-link" href="#">Search</a>
+                                <Link className="nav-link" to="/foodsearch">Search</Link>
                             </li>
                             <li className="nav-item active">
-                                <a className="nav-link disabled" href="#">Login</a>
+                                <Link className="nav-link disabled" to="/login">Login</Link>
                             </li>
                             </ul>
                         </div>

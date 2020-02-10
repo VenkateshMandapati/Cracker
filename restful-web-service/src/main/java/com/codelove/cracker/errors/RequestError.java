@@ -9,6 +9,11 @@ public class RequestError {
     public RequestError() {
     }
 
+    public RequestError(String fieldName, String errorMessage) {
+        this.fieldName = fieldName;
+        this.errorMessage = errorMessage;
+    }
+
     public String getFieldName() {
         return fieldName;
     }

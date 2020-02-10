@@ -5,7 +5,9 @@ import com.codelove.cracker.errors.RequestError;
 import com.codelove.cracker.exception.InvalidRequestException;
 import com.codelove.cracker.requestTypes.FoodEntryRequest;
 import com.codelove.cracker.requestTypes.FoodWithNutrientsRequest;
+import com.codelove.cracker.requestTypes.LoginCredentials;
 import com.codelove.cracker.responseTypes.FoodDetailsResponse;
+import com.codelove.cracker.responseTypes.LoginResponse;
 import com.codelove.cracker.responseTypes.NutrientsSearchResponse;
 import com.codelove.cracker.service.ICalorieTrackerService;
 
@@ -13,8 +15,10 @@ import com.codelove.cracker.validators.RequestValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,12 +31,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins="http://localhost:3000")
 public class BaseController {
 
     @Autowired
@@ -82,11 +89,19 @@ public class BaseController {
         return "Customer with Id: " + customerId + " deleted succesfully";
     }
 
+    @PostMapping("login")
+    public LoginResponse isValidCredentials(@RequestBody LoginCredentials loginCredentials){
+        return calorieTrackerService.isCustomerCredentialsValid(loginCredentials.getEmail(), loginCredentials.getPassword());
+    }
+
     @GetMapping("/fooddetails")
     public FoodDetailsResponse getFoodDetailsForDateRange(@RequestParam("id") int customerId,
-                                                          @RequestParam("startdate") String startDate,
+                                                          @RequestParam(value="startdate", required=false) String startDate,
                                                           @RequestParam(value="enddate", required=false) String endDate){
         RequestValidator.isCustomerValid(customerId, calorieTrackerService);
+        if(startDate==null && endDate==null){
+            return calorieTrackerService.getCustomerLastLoggedFoodDetails(customerId);
+        }
         return endDate != null ? calorieTrackerService.getFoodDetailsForDateRange(customerId, startDate, endDate):
                                  calorieTrackerService.getFoodDetailsForSingleDay(customerId, startDate);
     }
@@ -101,6 +116,7 @@ public class BaseController {
         return "Food Details uploaded Succesfully";
     }
 
+    //If the nutrient list is empty, this will return calories by default
     @PostMapping("/nutrients")
     public NutrientsSearchResponse getNutrientsInfoForFood(@Valid @RequestBody FoodWithNutrientsRequest foodWithNutrientsRequest, BindingResult bindingResult) {
         checkForBindingErrors(bindingResult);

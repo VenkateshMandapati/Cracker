@@ -6,6 +6,10 @@
     background-color:lightblue
   }
 
-  .header {
-    background-color:lightblue
-  }
+.header {
+  background-color:lightblue
+}
+
+#searchTerm{
+  width:700px
+}

@@ -2,6 +2,7 @@ package com.codelove.cracker.ndbapi.nutrientsAPI.service;
 
 import com.codelove.cracker.exception.NDBAPIException;
 import com.codelove.cracker.ndbapi.common.APIConnectionDetails;
+import com.codelove.cracker.ndbapi.constants.NDBApiConstants;
 import com.codelove.cracker.ndbapi.nutrientsAPI.responseTypes.FoodWithNutrientsResponse;
 import com.codelove.cracker.platform.REST.IRESTAPIConnector;
 import com.codelove.cracker.utils.CrackerUtils;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -32,8 +35,12 @@ public class NutrientsAPIService extends APIConnectionDetails implements INutrie
     @Override
 	public FoodWithNutrientsResponse getNutrientsInfoForFood(String ndbNo, String foodGroupId, List<String> nutrientIds) {
 
-        if(nutrientIds == null || nutrientIds.isEmpty()){
-            throw new NDBAPIException("The nutrientId list cannot be null or empty", HttpStatus.BAD_REQUEST);
+//        if(nutrientIds == null || nutrientIds.isEmpty()){
+//            throw new NDBAPIException("The nutrientId list cannot be null or empty", HttpStatus.BAD_REQUEST);
+//        }
+
+        if(nutrientIds.isEmpty()){
+            nutrientIds = populateNutrientsListWithDefaultValues();
         }
 
         String nutrientsAPIurl = buildNutrientsAPIurl(ndbNo, foodGroupId, nutrientIds);
@@ -79,5 +86,9 @@ public class NutrientsAPIService extends APIConnectionDetails implements INutrie
 
         return sb.toString();
 
+    }
+
+    private List<String> populateNutrientsListWithDefaultValues(){
+        return new ArrayList<>(Arrays.asList(NDBApiConstants.caloriesNutrientId));
     }
 }

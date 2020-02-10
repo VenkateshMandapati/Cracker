@@ -37,6 +37,7 @@ com/codelove/cracker/ndbapi/common/responseTypes/Food.class
 com/codelove/cracker/platform/REST/RestTemplateErrorResponseErrorHandler.class
 com/codelove/cracker/errors/RequestError.class
 com/codelove/cracker/ndbapi/common/responseTypes/Nutrient.class
+com/codelove/cracker/requestTypes/LoginCredentials.class
 com/codelove/cracker/dao/CommonDaoRepository.class
 com/codelove/cracker/ndbapi/nutrientsAPI/service/NutrientsAPIService.class
 com/codelove/cracker/ndbapi/searchAPI/responseTypes/Result.class
