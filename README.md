@@ -11,3 +11,5 @@ Ports Used:
 Tomcat uses 8080 by default, one can override this application.properties file using server.port React uses 3000 by default, one can override this in package.json
 
 Change in master directly for commit.
+Test to create conflict.
+Another commit local
