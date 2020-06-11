@@ -9,3 +9,5 @@ Steps to run the App locally
 
 Ports Used: 
 Tomcat uses 8080 by default, one can override this application.properties file using server.port React uses 3000 by default, one can override this in package.json
+
+Fast foward master
