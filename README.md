@@ -9,6 +9,8 @@ Steps to run the App locally
 1. Start the backend springboot service from command line by running mvn springboot:run
 2. Start the react front end by running npm start.
 
+Branch 3 - Commit 3
+
 Ports Used: 
 Tomcat uses 8080 by default, one can override this application.properties file using server.port React uses 3000 by default, one can override this in package.json
 
